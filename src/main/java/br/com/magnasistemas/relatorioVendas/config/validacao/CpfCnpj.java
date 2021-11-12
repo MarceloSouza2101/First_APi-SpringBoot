@@ -9,16 +9,15 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-@Constraint(validatedBy = {CpfCnpjValidator.class})
-	@Target({ElementType.FIELD, ElementType.PARAMETER})
-	@Retention(value = RetentionPolicy.RUNTIME)
-	@Documented
-	public @interface CpfCnpj {
+@Constraint(validatedBy = { CpfCnpjValidator.class })
+@Target({ ElementType.FIELD, ElementType.PARAMETER })
+@Retention(value = RetentionPolicy.RUNTIME)
+@Documented
+public @interface CpfCnpj {
 
-	  String message() default "CPF/CNPJ inválido";
+	String message() default "CPF/CNPJ inválido";
 
-	  Class<?>[] groups() default {};
+	Class<?>[] groups() default {};
 
-	  Class<? extends Payload>[] payload() default {};
+	Class<? extends Payload>[] payload() default {};
 }
-

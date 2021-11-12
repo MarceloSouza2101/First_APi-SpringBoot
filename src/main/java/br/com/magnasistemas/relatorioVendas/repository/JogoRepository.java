@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 import br.com.magnasistemas.relatorioVendas.entity.JogoEntity;
 
 @Repository
-public interface JogoRepository extends JpaRepository<JogoEntity, Long>{
-	
+public interface JogoRepository extends JpaRepository<JogoEntity, Long> {
+
 	public JogoEntity findByLote(String lote);
+
+	public void deleteByLote(String lote);
 }

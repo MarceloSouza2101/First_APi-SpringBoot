@@ -6,9 +6,10 @@ import org.springframework.stereotype.Repository;
 import br.com.magnasistemas.relatorioVendas.entity.FabricanteEntity;
 
 @Repository
-public interface FabricanteRepository extends JpaRepository<FabricanteEntity, Long>{
+public interface FabricanteRepository extends JpaRepository<FabricanteEntity, Long> {
 
 	public FabricanteEntity findByCnpj(String cnpj);
 
-	
+	public void deleteByCnpj(String cnpj);
+
 }

@@ -16,20 +16,23 @@ import br.com.magnasistemas.relatorioVendas.config.validacao.CpfCnpj;
 
 @Entity
 public class FabricanteEntity {
-	
-	@Id @GeneratedValue(strategy =  GenerationType.IDENTITY)
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(unique = true) @NotNull @NotEmpty @CpfCnpj
+	@Column(unique = true)
+	@NotNull
+	@NotEmpty
+	@CpfCnpj
 	private String cnpj;
 	private String nome;
-	@OneToMany @NotNull
+	@OneToMany
+	@NotNull
 	private List<JogoEntity> jogos;
-	
-	
+
 	public FabricanteEntity() {
 	}
-	
-	
+
 	public FabricanteEntity(String cnpj, String nome, List<JogoEntity> jogos) {
 		super();
 		this.cnpj = cnpj;
@@ -40,30 +43,32 @@ public class FabricanteEntity {
 	public String getCnpj() {
 		return cnpj;
 	}
+
 	public void setCnpj(String cnpj) {
 		this.cnpj = cnpj;
 	}
+
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
 	public List<JogoEntity> getJogos() {
 		return jogos;
 	}
+
 	public void setJogos(List<JogoEntity> jogos) {
 		this.jogos = jogos;
 	}
-	
-	
-	
-	
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(cnpj, nome);
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

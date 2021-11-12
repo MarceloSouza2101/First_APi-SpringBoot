@@ -113,7 +113,7 @@ public class CpfCnpjValidator implements ConstraintValidator<CpfCnpj, String> {
 			return (false);
 		char dig13, dig14;
 		int sm, i, r, num, peso; // "try" - protege o código para eventuais
-									// erros de conversao de tipo (int)
+		// erros de conversao de tipo (int)
 		try {
 			// Calculo do 1o. Digito Verificador
 			sm = 0;

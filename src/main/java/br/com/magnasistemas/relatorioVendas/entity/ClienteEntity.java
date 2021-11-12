@@ -9,24 +9,27 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import br.com.magnasistemas.relatorioVendas.config.validacao.CpfCnpj;
 
-
 @Entity
 public class ClienteEntity {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@NotNull @NotEmpty @CpfCnpj @Column(unique = true)
+	@NotNull
+	@NotEmpty
+	@CpfCnpj
+	@Column(unique = true)
 	private String cpf;
 	private String nome;
-	
+
 	private int telefone;
-	@ManyToMany @NotNull 
+	@ManyToMany
+	@NotNull
 	private List<JogoEntity> jogos;
 
 	public ClienteEntity() {

@@ -6,12 +6,11 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
+import br.com.magnasistemas.relatorioVendas.dto.AtualizarClienteDTO;
 import br.com.magnasistemas.relatorioVendas.dto.ClienteDTO;
-import br.com.magnasistemas.relatorioVendas.dto.DetalhesClienteDto;
+import br.com.magnasistemas.relatorioVendas.dto.DetalhesClienteDTO;
 import br.com.magnasistemas.relatorioVendas.entity.ClienteEntity;
 import br.com.magnasistemas.relatorioVendas.entity.JogoEntity;
 import br.com.magnasistemas.relatorioVendas.repository.ClienteRepository;
@@ -22,17 +21,18 @@ public class ClienteService {
 
 	@Autowired
 	ClienteRepository clienteRepository;
-	
+
 	@Autowired
 	MessageSource messageSource;
-	
+
 	@Autowired
 	JogoRepository jogoRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
 
-	public List<ClienteDTO> pegarTodos() {
+	// PEGAR TODOS
+	public List<ClienteDTO> buscarTodos() {
 		List<ClienteDTO> clientesDTO = new ArrayList<>();
 		List<ClienteEntity> clientes = clienteRepository.findAll();
 		for (ClienteEntity clienteEntity : clientes) {
@@ -42,19 +42,33 @@ public class ClienteService {
 		return clientesDTO;
 	}
 
-	public DetalhesClienteDto buscarPorCpf(String cpf) {
+	// BUSCAR POR CPF
+	public DetalhesClienteDTO buscarPorCpf(String cpf) {
 		ClienteEntity cliente = clienteRepository.findByCpf(cpf);
-		return  modelMapper.map(cliente, DetalhesClienteDto.class);
-		
+		return modelMapper.map(cliente, DetalhesClienteDTO.class);
 	}
 
-	public DetalhesClienteDto salvarClienteBanco(DetalhesClienteDto cliente) {
+	// SALVAR
+	public DetalhesClienteDTO salvar(DetalhesClienteDTO cliente) {
 		List<JogoEntity> jogos = new ArrayList<>();
 		cliente.getJogos().stream().forEach(jogo -> jogos.add(jogoRepository.findByLote(jogo.getLote())));
 		ClienteEntity novo = modelMapper.map(cliente, ClienteEntity.class);
 		novo.setJogos(jogos);
 		clienteRepository.save(novo);
-		return modelMapper.map(novo, DetalhesClienteDto.class);
+		return modelMapper.map(novo, DetalhesClienteDTO.class);
 	}
-	
+
+	// ATUALIZAR
+	public DetalhesClienteDTO atualizar(String cpf, AtualizarClienteDTO cliente) {
+		ClienteEntity clienteEntity = clienteRepository.findByCpf(cpf);
+		clienteEntity.setTelefone(cliente.getTelefone());
+		clienteRepository.save(clienteEntity);
+		DetalhesClienteDTO novoClinte = modelMapper.map(clienteEntity, DetalhesClienteDTO.class);
+		return novoClinte;
+	}
+
+	// DELETAR POR CPF
+	public void deletarPorCpf(String cpf) {
+		clienteRepository.deleteByCpf(cpf);
+	}
 }

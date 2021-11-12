@@ -9,5 +9,5 @@ import br.com.magnasistemas.relatorioVendas.entity.ClienteEntity;
 public interface ClienteRepository extends JpaRepository<ClienteEntity, Long> {
 	
 	public ClienteEntity findByCpf(String cpf);
-
+	public void deleteByCpf(String cpf);
 }

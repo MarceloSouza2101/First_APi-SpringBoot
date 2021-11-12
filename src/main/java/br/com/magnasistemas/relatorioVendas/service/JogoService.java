@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import br.com.magnasistemas.relatorioVendas.dto.DetalhesJogoDto;
+import br.com.magnasistemas.relatorioVendas.dto.AtualizarJogoDTO;
+import br.com.magnasistemas.relatorioVendas.dto.DetalhesJogoDTO;
 import br.com.magnasistemas.relatorioVendas.dto.JogoDTO;
 import br.com.magnasistemas.relatorioVendas.entity.JogoEntity;
 import br.com.magnasistemas.relatorioVendas.repository.JogoRepository;
@@ -21,7 +22,7 @@ public class JogoService {
 
 	@Autowired
 	MessageSource messageSource;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
 
@@ -32,22 +33,35 @@ public class JogoService {
 			JogoDTO novo = modelMapper.map(jogoEntity, JogoDTO.class);
 			jogosDTO.add(novo);
 		}
-		if(jogosDTO.isEmpty()) {
-		return jogosDTO;
+		if (jogosDTO.isEmpty()) {
+			return jogosDTO;
 		}
 		return jogosDTO;
 	}
-	public DetalhesJogoDto buscarPorLote(String lote) {
+
+	public DetalhesJogoDTO buscarPorLote(String lote) {
 		JogoEntity jogo = jogoRepository.findByLote(lote);
-		return  modelMapper.map(jogo, DetalhesJogoDto.class);
+		return modelMapper.map(jogo, DetalhesJogoDTO.class);
 	}
-	
-	
-	 public void salvarJogoBanco(DetalhesJogoDto jogo) {
-		 JogoEntity novoEntity = modelMapper.map(jogo, JogoEntity.class);
-		 jogoRepository.save(novoEntity);
-		 //return modelMapper.map(novoEntity, DetalhesJogoDto.class);
-	 }
-		
-	
+
+	public void salvarJogoBanco(DetalhesJogoDTO jogo) {
+		JogoEntity novoEntity = modelMapper.map(jogo, JogoEntity.class);
+		jogoRepository.save(novoEntity);
+		// return modelMapper.map(novoEntity, DetalhesJogoDto.class);
+	}
+
+	public DetalhesJogoDTO atualizar(String lote, AtualizarJogoDTO jogo) {
+
+		JogoEntity jogoEntity = jogoRepository.findByLote(lote);
+		jogoEntity.setModalidade(jogo.getModalidade());
+		jogoEntity.setDescricao(jogo.getDescricao());
+		jogoRepository.save(jogoEntity);
+
+		DetalhesJogoDTO novoJogoDto = modelMapper.map(jogoEntity, DetalhesJogoDTO.class);
+		return novoJogoDto;
+	}
+
+	public void deletarPorLote(String lote) {
+		jogoRepository.deleteByLote(lote);
+	}
 }
