@@ -2,6 +2,7 @@ package br.com.magnasistemas.relatorioVendas.dto;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -9,15 +10,14 @@ import javax.validation.constraints.NotNull;
 
 public class DetalhesJogoDto {
 
-	@NotBlank
+	@Column(unique = true) @NotNull @NotEmpty
 	private String lote;
 	@NotBlank
 	private String nome;
 	@NotBlank
 	private String modalidade;
-	@NotNull @NotEmpty
-	private LocalDate lancamento;
 	@NotNull
+	private LocalDate lancamento;
 	private String descricao;
 	
 	

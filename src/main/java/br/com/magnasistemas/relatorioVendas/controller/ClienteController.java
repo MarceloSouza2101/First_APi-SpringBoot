@@ -3,9 +3,11 @@ package br.com.magnasistemas.relatorioVendas.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.UnexpectedTypeException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,27 +25,28 @@ import br.com.magnasistemas.relatorioVendas.service.ClienteService;
 @RequestMapping("/cliente")
 public class ClienteController {
 
-	
 	@Autowired
-	ClienteService  clienteService;
-	
+	ClienteService clienteService;
+
 	@GetMapping
 	public List<ClienteDTO> listarTodos() {
 		return clienteService.pegarTodos();
 	}
-	
+
 	@GetMapping("/{cpf}")
 	public DetalhesClienteDto buscarCpf(@PathVariable String cpf) {
 		return clienteService.buscarPorCpf(cpf);
 	}
-	
-	
-	@PostMapping
-	public ResponseEntity<DetalhesClienteDto> cadastrar(@RequestBody @Valid DetalhesClienteDto cliente, UriComponentsBuilder uriBuilder){
-		clienteService.salvarClienteBanco(cliente);
-		URI uri = uriBuilder.path("/cliente/{cpf}").buildAndExpand(cliente.getCpf()).toUri();
-		return ResponseEntity.created(uri).build();
-	}
 
-	
+	@PostMapping
+	public ResponseEntity<Object> cadastrar(@RequestBody @Valid DetalhesClienteDto cliente,
+			UriComponentsBuilder uriBuilder) {
+		try {
+			clienteService.salvarClienteBanco(cliente);
+			URI uri = uriBuilder.path("/cliente/{cpf}").buildAndExpand(cliente.getCpf()).toUri();
+			return ResponseEntity.created(uri).build();
+		} catch (DataIntegrityViolationException | UnexpectedTypeException | NullPointerException e) {
+			return ResponseEntity.badRequest().body("ERRO AO TENTAR CADASTRAR CLIENTE, VERIFIQUE OS DADOS!");
+		}
+	}
 }

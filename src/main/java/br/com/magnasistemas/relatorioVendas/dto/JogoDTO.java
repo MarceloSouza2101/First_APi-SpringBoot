@@ -2,6 +2,7 @@ package br.com.magnasistemas.relatorioVendas.dto;
 
 public class JogoDTO {
 
+	
 	private String lote;
 	private String nome;
 	private String modalidade;

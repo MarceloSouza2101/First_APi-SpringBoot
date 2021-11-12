@@ -3,17 +3,21 @@ package br.com.magnasistemas.relatorioVendas.entity;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 
 @Entity
 public class JogoEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(unique = true) @NotNull @NotEmpty
 	private String lote;
 	private String nome;
 	private String modalidade;
@@ -24,6 +28,7 @@ public class JogoEntity {
 	}
 
 	public JogoEntity(String lote, String nome, String modalidade, LocalDate lancamento, String descricao) {
+		super();
 		this.lote = lote;
 		this.nome = nome;
 		this.modalidade = modalidade;

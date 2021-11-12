@@ -3,21 +3,18 @@ package br.com.magnasistemas.relatorioVendas.dto;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
-import br.com.magnasistemas.relatorioVendas.config.validacao.CpfCnpj;
-
-
 
 public class DetalhesClienteDto {
 
-	@NotBlank @CpfCnpj
+	@NotBlank
 	private String cpf;
 	@NotBlank
 	private String nome;
 	@NotNull
 	private int telefone;
-	@NotNull
+	@NotEmpty
 	private List<JogoDTO> jogos;
 	
 	

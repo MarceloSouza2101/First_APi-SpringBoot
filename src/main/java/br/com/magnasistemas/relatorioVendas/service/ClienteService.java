@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import br.com.magnasistemas.relatorioVendas.dto.ClienteDTO;
 import br.com.magnasistemas.relatorioVendas.dto.DetalhesClienteDto;
@@ -19,6 +22,9 @@ public class ClienteService {
 
 	@Autowired
 	ClienteRepository clienteRepository;
+	
+	@Autowired
+	MessageSource messageSource;
 	
 	@Autowired
 	JogoRepository jogoRepository;
@@ -42,13 +48,13 @@ public class ClienteService {
 		
 	}
 
-	public void salvarClienteBanco(DetalhesClienteDto cliente) {
+	public DetalhesClienteDto salvarClienteBanco(DetalhesClienteDto cliente) {
 		List<JogoEntity> jogos = new ArrayList<>();
 		cliente.getJogos().stream().forEach(jogo -> jogos.add(jogoRepository.findByLote(jogo.getLote())));
 		ClienteEntity novo = modelMapper.map(cliente, ClienteEntity.class);
 		novo.setJogos(jogos);
 		clienteRepository.save(novo);
-		//return modelMapper.map(novo, DetalhesClienteDto.class);
+		return modelMapper.map(novo, DetalhesClienteDto.class);
 	}
 	
 }

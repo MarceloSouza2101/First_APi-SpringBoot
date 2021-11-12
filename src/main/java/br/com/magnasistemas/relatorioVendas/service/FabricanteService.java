@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import br.com.magnasistemas.relatorioVendas.dto.DetalhesFabricanteDto;
@@ -21,6 +22,7 @@ public class FabricanteService {
 	@Autowired
 	FabricanteRepository fabricanteRepository;
 	
+	
 	@Autowired
 	JogoRepository jogoRepository;
 	
@@ -34,16 +36,12 @@ public class FabricanteService {
 			FabricanteDTO novo = modelMapper.map(fabricanteEntity, FabricanteDTO.class);
 			fabricanteDTO.add(novo);
 		}
-		if(fabricanteDTO.isEmpty()) {
-		return fabricanteDTO;
-		}
 		return fabricanteDTO;
 	}
 
 	public DetalhesFabricanteDto buscarPorCnpj(String cnpj) {
-		FabricanteEntity jogo = fabricanteRepository.findByCnpj(cnpj);
-		return  modelMapper.map(jogo, DetalhesFabricanteDto.class);
-		
+		FabricanteEntity fabricante = fabricanteRepository.findByCnpj(cnpj);
+		return  modelMapper.map(fabricante, DetalhesFabricanteDto.class);
 	}
 
 	public void salvarFabricanteBanco(DetalhesFabricanteDto fabricanteDto) {
@@ -52,7 +50,5 @@ public class FabricanteService {
 		FabricanteEntity novo = modelMapper.map(fabricanteDto, FabricanteEntity.class);
 		novo.setJogos(jogos);
 		fabricanteRepository.save(novo);
-		//return modelMapper.map(novo, DetalhesFabricanteDto.class);
-	}
-	
+		}
 }

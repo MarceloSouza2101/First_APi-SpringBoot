@@ -7,7 +7,7 @@ public class ErroDeFormularioDTO {
 	
 	
 	public ErroDeFormularioDTO(String campo, String mensagem) {
-		super();
+		
 		this.campo = campo;
 		this.mensagem = mensagem;
 	}

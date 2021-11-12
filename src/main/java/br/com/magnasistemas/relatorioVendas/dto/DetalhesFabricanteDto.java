@@ -5,14 +5,11 @@ import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import br.com.magnasistemas.relatorioVendas.config.validacao.CpfCnpj;
-
-
 public class DetalhesFabricanteDto {
 
 	@NotBlank
 	private String nome;
-	@NotBlank @CpfCnpj
+	@NotBlank
 	private String cnpj;
 	@NotNull
 	private List<JogoDTO> jogos;
