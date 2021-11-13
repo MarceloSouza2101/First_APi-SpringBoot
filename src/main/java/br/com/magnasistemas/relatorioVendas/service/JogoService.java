@@ -6,6 +6,9 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.magnasistemas.relatorioVendas.dto.AtualizarJogoDTO;
@@ -26,17 +29,17 @@ public class JogoService {
 	@Autowired
 	ModelMapper modelMapper;
 
-	public List<JogoDTO> pegarTodos() {
+	public Page<JogoDTO> pegarTodos(Pageable pageable) {
 		List<JogoDTO> jogosDTO = new ArrayList<>();
-		List<JogoEntity> jogos = jogoRepository.findAll();
+		Page<JogoEntity> jogos = jogoRepository.findAll(pageable);
 		for (JogoEntity jogoEntity : jogos) {
 			JogoDTO novo = modelMapper.map(jogoEntity, JogoDTO.class);
 			jogosDTO.add(novo);
 		}
-		if (jogosDTO.isEmpty()) {
-			return jogosDTO;
-		}
-		return jogosDTO;
+
+		Page<JogoDTO> page = new PageImpl<JogoDTO>(jogosDTO, pageable, 0);
+
+		return page;
 	}
 
 	public DetalhesJogoDTO buscarPorLote(String lote) {

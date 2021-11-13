@@ -1,13 +1,14 @@
 package br.com.magnasistemas.relatorioVendas.controller;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,8 +34,9 @@ public class FabricanteController {
 	FabricanteService fabricanteService;
 
 	@GetMapping
-	public List<FabricanteDTO> listarTodos() {
-		return fabricanteService.pegarTodos();
+	public ResponseEntity<Page<FabricanteDTO>> listarTodos(
+			@PageableDefault(sort = "cnpj", direction = Direction.ASC, page = 0, size = 2) Pageable pageable) {
+		return ResponseEntity.ok(fabricanteService.pegarTodos(pageable));
 	}
 
 	@GetMapping("/{cnpj}")
@@ -45,13 +47,10 @@ public class FabricanteController {
 	@PostMapping
 	public ResponseEntity<Object> cadastrar(@RequestBody @Valid DetalhesFabricanteDTO fabricanteDto,
 			UriComponentsBuilder builder) {
-		try {
-			fabricanteService.salvarFabricanteBanco(fabricanteDto);
-			URI uri = builder.path("/fabricante/{cnpj}").buildAndExpand(fabricanteDto.getCnpj()).toUri();
-			return ResponseEntity.created(uri).build();
-		} catch (DataIntegrityViolationException e) {
-			return ResponseEntity.badRequest().body("ERRO AO TENTAR CADASTRAR EMPRESA, VERIFIQUE OS DADOS!");
-		}
+
+		fabricanteService.salvarFabricanteBanco(fabricanteDto);
+		URI uri = builder.path("/fabricante/{cnpj}").buildAndExpand(fabricanteDto.getCnpj()).toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 	@PutMapping("/{cnpj}")

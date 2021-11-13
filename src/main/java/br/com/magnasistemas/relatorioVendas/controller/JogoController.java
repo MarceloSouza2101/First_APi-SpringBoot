@@ -1,12 +1,14 @@
 package br.com.magnasistemas.relatorioVendas.controller;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,8 +34,9 @@ public class JogoController {
 	JogoService jogoService;
 
 	@GetMapping
-	public List<JogoDTO> listarTodos() {
-		return jogoService.pegarTodos();
+	public ResponseEntity<Page<JogoDTO>> listarTodos(
+			@PageableDefault(sort = "lote", direction = Direction.ASC, page = 0, size = 2) Pageable pageable) {
+		return ResponseEntity.ok(jogoService.pegarTodos(pageable));
 	}
 
 	@GetMapping("/{lote}")
@@ -43,20 +46,18 @@ public class JogoController {
 
 	@PostMapping
 	public ResponseEntity<Object> cadastrar(@RequestBody @Valid DetalhesJogoDTO jogo, UriComponentsBuilder uriBuilder) {
-		try {
-			jogoService.salvarJogoBanco(jogo);
-			URI uri = uriBuilder.path("/jogo/{lote}").buildAndExpand(jogo.getLote()).toUri();
-			return ResponseEntity.created(uri).build();
-		} catch (DataIntegrityViolationException e) {
-			return ResponseEntity.badRequest().body("ERRO AO TENTAR CADASTRAR EMPRESA, VERIFIQUE OS DADOS!");
-		}
+
+		jogoService.salvarJogoBanco(jogo);
+		URI uri = uriBuilder.path("/jogo/{lote}").buildAndExpand(jogo.getLote()).toUri();
+		return ResponseEntity.created(uri).build();
+
 	}
 
 	@PutMapping("/{lote}")
 	public DetalhesJogoDTO atualizar(@PathVariable String lote, @RequestBody @Valid AtualizarJogoDTO jogo) {
 		return jogoService.atualizar(lote, jogo);
 	}
-	
+
 	@DeleteMapping("/{lote}")
 	@Transactional
 	public ResponseEntity<Object> deletar(@PathVariable String lote) {

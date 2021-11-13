@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.magnasistemas.relatorioVendas.dto.AtualizarFabricanteDTO;
@@ -28,14 +30,17 @@ public class FabricanteService {
 	@Autowired
 	ModelMapper modelMapper;
 
-	public List<FabricanteDTO> pegarTodos() {
+	public Page<FabricanteDTO> pegarTodos(Pageable pageable) {
 		List<FabricanteDTO> fabricanteDTO = new ArrayList<>();
-		List<FabricanteEntity> fabricante = fabricanteRepository.findAll();
+		Page<FabricanteEntity> fabricante = fabricanteRepository.findAll(pageable);
 		for (FabricanteEntity fabricanteEntity : fabricante) {
 			FabricanteDTO novo = modelMapper.map(fabricanteEntity, FabricanteDTO.class);
 			fabricanteDTO.add(novo);
 		}
-		return fabricanteDTO;
+
+		Page<FabricanteDTO> page = new PageImpl<>(fabricanteDTO, pageable, 0);
+
+		return page;
 	}
 
 	public DetalhesFabricanteDTO buscarPorCnpj(String cnpj) {

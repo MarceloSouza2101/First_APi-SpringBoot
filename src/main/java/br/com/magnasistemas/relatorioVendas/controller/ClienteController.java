@@ -1,13 +1,14 @@
 package br.com.magnasistemas.relatorioVendas.controller;
 
 import java.net.URI;
-import java.util.List;
 
-import javax.validation.UnexpectedTypeException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,8 +34,9 @@ public class ClienteController {
 	ClienteService clienteService;
 
 	@GetMapping
-	public List<ClienteDTO> listarTodos() {
-		return clienteService.buscarTodos();
+	public ResponseEntity<Page<ClienteDTO>> listarTodos(
+			@PageableDefault(sort = "cpf", direction = Direction.ASC, page = 0, size = 2) Pageable pageable) {
+		return ResponseEntity.ok(clienteService.buscarTodos(pageable));
 	}
 
 	@GetMapping("/{cpf}")
@@ -45,13 +47,10 @@ public class ClienteController {
 	@PostMapping
 	public ResponseEntity<Object> cadastrar(@RequestBody @Valid DetalhesClienteDTO cliente,
 			UriComponentsBuilder uriBuilder) {
-		try {
-			clienteService.salvar(cliente);
-			URI uri = uriBuilder.path("/cliente/{cpf}").buildAndExpand(cliente.getCpf()).toUri();
-			return ResponseEntity.created(uri).build();
-		} catch (DataIntegrityViolationException | UnexpectedTypeException | NullPointerException e) {
-			return ResponseEntity.badRequest().body("ERRO AO TENTAR CADASTRAR CLIENTE, VERIFIQUE OS DADOS!");
-		}
+
+		clienteService.salvar(cliente);
+		URI uri = uriBuilder.path("/cliente/{cpf}").buildAndExpand(cliente.getCpf()).toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 	@PutMapping("/{cpf}")

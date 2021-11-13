@@ -6,6 +6,9 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.magnasistemas.relatorioVendas.dto.AtualizarClienteDTO;
@@ -32,14 +35,17 @@ public class ClienteService {
 	ModelMapper modelMapper;
 
 	// PEGAR TODOS
-	public List<ClienteDTO> buscarTodos() {
+	public Page<ClienteDTO> buscarTodos(Pageable pageable) {
 		List<ClienteDTO> clientesDTO = new ArrayList<>();
-		List<ClienteEntity> clientes = clienteRepository.findAll();
+		Page<ClienteEntity> clientes = clienteRepository.findAll(pageable);
 		for (ClienteEntity clienteEntity : clientes) {
 			ClienteDTO novo = modelMapper.map(clienteEntity, ClienteDTO.class);
 			clientesDTO.add(novo);
 		}
-		return clientesDTO;
+
+		Page<ClienteDTO> page = new PageImpl<>(clientesDTO, pageable, 0);
+
+		return page;
 	}
 
 	// BUSCAR POR CPF
