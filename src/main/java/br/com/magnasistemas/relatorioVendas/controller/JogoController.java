@@ -54,7 +54,7 @@ public class JogoController {
 	}
 
 	@PutMapping("/{lote}")
-	public DetalhesJogoDTO atualizar(@PathVariable String lote, @RequestBody @Valid AtualizarJogoDTO jogo) {
+	public ResponseEntity<DetalhesJogoDTO> atualizar(@PathVariable String lote, @RequestBody @Valid AtualizarJogoDTO jogo) {
 		return jogoService.atualizar(lote, jogo);
 	}
 

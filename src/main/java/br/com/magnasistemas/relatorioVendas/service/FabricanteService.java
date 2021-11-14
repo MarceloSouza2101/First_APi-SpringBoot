@@ -3,13 +3,17 @@ package br.com.magnasistemas.relatorioVendas.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import br.com.magnasistemas.relatorioVendas.dto.AlterarListas;
 import br.com.magnasistemas.relatorioVendas.dto.AtualizarFabricanteDTO;
 import br.com.magnasistemas.relatorioVendas.dto.DetalhesFabricanteDTO;
 import br.com.magnasistemas.relatorioVendas.dto.FabricanteDTO;
@@ -71,4 +75,27 @@ public class FabricanteService {
 	public void deletarPorCnpj(String cnpj) {
 		fabricanteRepository.deleteByCnpj(cnpj);
 	}
+
+	//adicionando 1 jogo ao fabricante
+	public ResponseEntity<AlterarListas> adicionarJogo(String cnpj, @Valid AlterarListas cliente) {
+		FabricanteEntity fabricanteEntity = fabricanteRepository.findByCnpj(cnpj);
+		JogoEntity novo = jogoRepository.findByLote(cliente.getLote());
+
+		fabricanteEntity.getJogos().add(novo);
+		fabricanteRepository.save(fabricanteEntity);
+
+		return ResponseEntity.ok().build();
+
+	}
+	
+	// Remover 1 jogo do Fabricante
+		public ResponseEntity<AlterarListas> removerJogo(String cnpj, AlterarListas fabricante) {
+			FabricanteEntity fabricanteEntity = fabricanteRepository.findByCnpj(cnpj);
+			JogoEntity novo = jogoRepository.findByLote(fabricante.getLote());
+
+			fabricanteEntity.getJogos().remove(novo);
+			fabricanteRepository.save(fabricanteEntity);
+
+			return ResponseEntity.ok().build();
+		}
 }

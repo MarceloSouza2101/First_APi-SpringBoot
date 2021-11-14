@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.magnasistemas.relatorioVendas.dto.AlterarListas;
 import br.com.magnasistemas.relatorioVendas.dto.AtualizarClienteDTO;
 import br.com.magnasistemas.relatorioVendas.dto.ClienteDTO;
 import br.com.magnasistemas.relatorioVendas.dto.DetalhesClienteDTO;
@@ -36,16 +38,16 @@ public class ClienteController {
 	@GetMapping
 	public ResponseEntity<Page<ClienteDTO>> listarTodos(
 			@PageableDefault(sort = "cpf", direction = Direction.ASC, page = 0, size = 2) Pageable pageable) {
-		return ResponseEntity.ok(clienteService.buscarTodos(pageable));
+		return clienteService.buscarTodos(pageable);
 	}
 
 	@GetMapping("/{cpf}")
-	public DetalhesClienteDTO buscarCpf(@PathVariable String cpf) {
+	public ResponseEntity<DetalhesClienteDTO> buscarCpf(@PathVariable String cpf) {
 		return clienteService.buscarPorCpf(cpf);
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> cadastrar(@RequestBody @Valid DetalhesClienteDTO cliente,
+	public ResponseEntity<DetalhesClienteDTO> cadastrar(@RequestBody @Valid DetalhesClienteDTO cliente,
 			UriComponentsBuilder uriBuilder) {
 
 		clienteService.salvar(cliente);
@@ -54,8 +56,21 @@ public class ClienteController {
 	}
 
 	@PutMapping("/{cpf}")
-	public DetalhesClienteDTO atualizar(@PathVariable String cpf, @RequestBody @Valid AtualizarClienteDTO cliente) {
+	public ResponseEntity<DetalhesClienteDTO> atualizar(@PathVariable String cpf,
+			@RequestBody @Valid AtualizarClienteDTO cliente) {
 		return clienteService.atualizar(cpf, cliente);
+	}
+
+	@PatchMapping("/adicionar/{cpf}")
+	public ResponseEntity<AlterarListas> adicionarJogoCliente(@PathVariable String cpf,
+			@RequestBody @Valid AlterarListas cliente) {
+		return clienteService.adicionarJogo(cpf, cliente);
+	}
+
+	@PatchMapping("/remover/{cpf}")
+	public ResponseEntity<AlterarListas> removerJogoCLiente(@PathVariable String cpf,
+			@RequestBody @Valid AlterarListas cliente) {
+		return clienteService.removerJogo(cpf, cliente);
 	}
 
 	@DeleteMapping("/{cpf}")

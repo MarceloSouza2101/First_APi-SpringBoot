@@ -9,6 +9,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import br.com.magnasistemas.relatorioVendas.dto.AtualizarJogoDTO;
@@ -53,7 +54,7 @@ public class JogoService {
 		// return modelMapper.map(novoEntity, DetalhesJogoDto.class);
 	}
 
-	public DetalhesJogoDTO atualizar(String lote, AtualizarJogoDTO jogo) {
+	public ResponseEntity<DetalhesJogoDTO> atualizar(String lote, AtualizarJogoDTO jogo) {
 
 		JogoEntity jogoEntity = jogoRepository.findByLote(lote);
 		jogoEntity.setModalidade(jogo.getModalidade());
@@ -61,7 +62,7 @@ public class JogoService {
 		jogoRepository.save(jogoEntity);
 
 		DetalhesJogoDTO novoJogoDto = modelMapper.map(jogoEntity, DetalhesJogoDTO.class);
-		return novoJogoDto;
+		return ResponseEntity.ok(novoJogoDto);
 	}
 
 	public void deletarPorLote(String lote) {

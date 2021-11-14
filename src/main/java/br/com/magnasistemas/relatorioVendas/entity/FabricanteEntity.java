@@ -1,5 +1,6 @@
 package br.com.magnasistemas.relatorioVendas.entity;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,8 +16,10 @@ import javax.validation.constraints.NotNull;
 import br.com.magnasistemas.relatorioVendas.config.validacao.CpfCnpj;
 
 @Entity
-public class FabricanteEntity {
-
+public class FabricanteEntity implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
